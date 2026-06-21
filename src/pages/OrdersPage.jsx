@@ -14,33 +14,37 @@ function OrdersPage() {
     });
   }, []);
 
-  if (loading) return <p>Chargement...</p>;
+  if (loading) return <div className="container">Chargement...</div>;
 
   return (
-    <div style={{ padding: "24px" }}>
+    <div className="container">
       <h1>📋 Commandes</h1>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ borderBottom: "2px solid #ddd" }}>
-            <th style={{ textAlign: "left", padding: "8px" }}>ID</th>
-            <th style={{ textAlign: "left", padding: "8px" }}>Client</th>
-            <th style={{ textAlign: "left", padding: "8px" }}>Statut</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order) => (
-            <tr key={order.id} style={{ borderBottom: "1px solid #eee" }}>
-              <td style={{ padding: "8px" }}>
-                <Link to={`/orders/${order.id}`}>#{order.id}</Link>
-              </td>
-              <td style={{ padding: "8px" }}>Client #{order.customer_id}</td>
-              <td style={{ padding: "8px" }}>
-                <StatusBadge status={order.status} />
-              </td>
+      <div className="card">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Client</th>
+              <th>Statut</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {orders.map((order) => (
+              <tr key={order.id}>
+                <td>
+                  <Link className="link-id" to={`/orders/${order.id}`}>
+                    #{order.id}
+                  </Link>
+                </td>
+                <td>Client #{order.customer_id}</td>
+                <td>
+                  <StatusBadge status={order.status} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
