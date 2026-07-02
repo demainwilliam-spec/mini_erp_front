@@ -9,6 +9,8 @@ import {
 } from "../api/client";
 import StatusBadge from "../components/StatusBadge";
 
+
+
 function OrderDetailPage() {
   const { orderId } = useParams();
   const [summary, setSummary] = useState(null);
@@ -16,6 +18,7 @@ function OrderDetailPage() {
   const [selectedBookId, setSelectedBookId] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   function loadSummary() {
     getOrderSummary(orderId).then((data) => {
@@ -36,9 +39,18 @@ function OrderDetailPage() {
   }
 
   async function handleConfirm() {
-    await confirmOrder(orderId);
+  setError(null);
+  try {
+    const res = await confirmOrder(orderId);
+    if (res.detail) {
+      setError(res.detail);
+      return;
+    }
     loadSummary();
+  } catch (e) {
+    setError("Erreur lors de la confirmation.");
   }
+}
 
   async function handleClose() {
     await closeOrder(orderId);
@@ -82,6 +94,14 @@ function OrderDetailPage() {
           <strong>{summary.total_amount} €</strong>
         </div>
       </div>
+
+       <p style={{ marginTop: "16px", fontWeight: "bold" }}>
+        Total : {summary.total_amount} €
+      </p>
+
+      {error && (
+        <p style={{ color: "#ef4444", padding: "16px 0" }}>{error}</p>
+      )}
 
       {summary.status === "draft" && (
         <>
